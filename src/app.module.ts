@@ -25,8 +25,10 @@ import { ConfigService } from '@nestjs/config';
     // ...existing code...
     require('./route/customer/customer.module').CustomerModule,
     require('./route/route_template/route_template.module').RouteTemplateModule,
+    require('./route/route_template_customer/route_template_customer.module').RouteTemplateCustomerModule,
     require('./general/user/user.module').UserModule,
     require('./route/route_instance/route_instance.module').RouteInstanceModule,
+    require('./auth/auth.module').AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

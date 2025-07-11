@@ -18,6 +18,12 @@ export class CustomerController {
     return customer;
   }
 
+
+  @Get('by-route-template/:routeTemplateId')
+  async getByRouteTemplate(@Param('routeTemplateId') routeTemplateId: number): Promise<Customer[]> {
+    return this.customerService.findByRouteTemplate(Number(routeTemplateId));
+  }
+
   @Post()
   create(@Body() data: Partial<Customer>): Promise<Customer> {
     return this.customerService.create(data);
