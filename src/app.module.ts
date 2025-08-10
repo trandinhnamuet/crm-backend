@@ -4,6 +4,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { CustomerModule } from './route/customer/customer.module';
+import { RouteTemplateModule } from './route/route_template/route_template.module';
+import { RouteTemplateCustomerModule } from './route/route_template_customer/route_template_customer.module';
+import { UserModule } from './general/user/user.module';
+import { RouteInstanceModule } from './route/route_instance/route_instance.module';
+import { AuthModule } from './auth/auth.module';
+import { RouteInstanceCustomerModule } from './route/route_instance_customer/route_instance_customer.module';
 
 @Module({
   imports: [
@@ -22,13 +29,13 @@ import { ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
-    // ...existing code...
-    require('./route/customer/customer.module').CustomerModule,
-    require('./route/route_template/route_template.module').RouteTemplateModule,
-    require('./route/route_template_customer/route_template_customer.module').RouteTemplateCustomerModule,
-    require('./general/user/user.module').UserModule,
-    require('./route/route_instance/route_instance.module').RouteInstanceModule,
-    require('./auth/auth.module').AuthModule,
+    CustomerModule,
+    RouteTemplateModule,
+    RouteTemplateCustomerModule,
+    UserModule,
+    RouteInstanceModule,
+    AuthModule,
+    RouteInstanceCustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
