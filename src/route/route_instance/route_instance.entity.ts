@@ -12,7 +12,7 @@ export class RouteInstance {
   start_date: Date;
 
   @Column({ type: 'date', nullable: true })
-  end_date: Date;
+  end_date: Date | null;
 
   @Column({ type: 'boolean', default: false })
   is_finished: boolean;
