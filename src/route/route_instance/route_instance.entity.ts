@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { RouteTemplate } from '../route_template/route_template.entity';
 
 @Entity('route_instance')
 export class RouteInstance {
@@ -7,6 +8,10 @@ export class RouteInstance {
 
   @Column({ type: 'integer' })
   route_template_id: number;
+
+  @ManyToOne(() => RouteTemplate)
+  @JoinColumn({ name: 'route_template_id' })
+  route_template: RouteTemplate;
 
   @Column({ type: 'date' })
   start_date: Date;

@@ -11,7 +11,7 @@ export class RouteInstanceService {
   ) {}
 
   findAll(): Promise<RouteInstance[]> {
-    return this.routeInstanceRepository.find();
+    return this.routeInstanceRepository.find({ relations: ['route_template'] });
   }
 
   async findOne(id: number): Promise<RouteInstance | null> {
