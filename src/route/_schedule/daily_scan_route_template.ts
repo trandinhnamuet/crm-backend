@@ -25,7 +25,7 @@ export class DailyScanRouteTemplateService {
 
   // Chạy hàng ngày lúc 1h sáng theo giờ Việt Nam
   // @Cron('0 1 * * *', {
-  @Cron('0 1 * * *', {
+  @Cron('5 14 * * *', {
     timeZone: 'Asia/Ho_Chi_Minh',
   })
   async scanRouteTemplates() {
@@ -78,6 +78,27 @@ export class DailyScanRouteTemplateService {
     }
 
     return false;
+  }
+
+  // Hàm public để tạo route instance từ template ID
+  async createInstanceFromTemplate(templateId: number, date?: Date): Promise<void> {
+    const targetDate = date || new Date();
+    targetDate.setHours(0, 0, 0, 0); // Reset về đầu ngày
+
+    // Lấy thông tin route template
+    const template = await this.routeTemplateRepository.findOne({
+      where: { id: templateId },
+    });
+
+    if (!template) {
+      throw new Error(`Route template với ID ${templateId} không tồn tại`);
+    }
+
+    if (!template.is_active) {
+      throw new Error(`Route template ${templateId} không active`);
+    }
+
+    await this.createRouteInstanceWithCustomers(template, targetDate);
   }
 
   private async createRouteInstanceWithCustomers(template: RouteTemplate, date: Date) {

@@ -11,15 +11,23 @@ export class RouteInstanceCustomerService {
   ) {}
 
   findAll(): Promise<RouteInstanceCustomer[]> {
-    return this.ricRepository.find();
+    return this.ricRepository.find({
+      relations: ['customer']
+    });
   }
 
   async findByRouteInstance(routeInstanceId: number): Promise<RouteInstanceCustomer[]> {
-    return this.ricRepository.find({ where: { route_instance_id: routeInstanceId } });
+    return this.ricRepository.find({ 
+      where: { route_instance_id: routeInstanceId },
+      relations: ['customer']
+    });
   }
 
   async findOne(id: number): Promise<RouteInstanceCustomer | null> {
-    return this.ricRepository.findOneBy({ id });
+    return this.ricRepository.findOne({
+      where: { id },
+      relations: ['customer']
+    });
   }
 
   create(data: Partial<RouteInstanceCustomer>): Promise<RouteInstanceCustomer> {
