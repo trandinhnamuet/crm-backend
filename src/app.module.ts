@@ -12,6 +12,7 @@ import { RouteInstanceModule } from './route/route_instance/route_instance.modul
 import { AuthModule } from './auth/auth.module';
 import { RouteInstanceCustomerModule } from './route/route_instance_customer/route_instance_customer.module';
 import { RouteScheduleModule } from './route/_schedule/route_schedule.module';
+import { GoogleMapModule } from './route/google_map/google_map.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { RouteScheduleModule } from './route/_schedule/route_schedule.module';
     AuthModule,
     RouteInstanceCustomerModule,
     RouteScheduleModule,
+    GoogleMapModule
   ],
   controllers: [AppController],
   providers: [AppService],
