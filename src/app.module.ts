@@ -11,7 +11,6 @@ import { UserModule } from './general/user/user.module';
 import { RouteInstanceModule } from './route/route_instance/route_instance.module';
 import { AuthModule } from './auth/auth.module';
 import { RouteInstanceCustomerModule } from './route/route_instance_customer/route_instance_customer.module';
-import { RouteScheduleModule } from './route/_schedule/route_schedule.module';
 
 @Module({
   imports: [
@@ -37,7 +36,7 @@ import { RouteScheduleModule } from './route/_schedule/route_schedule.module';
     RouteInstanceModule,
     AuthModule,
     RouteInstanceCustomerModule,
-    RouteScheduleModule,
+    RouteInstanceModule
   ],
   controllers: [AppController],
   providers: [AppService],
