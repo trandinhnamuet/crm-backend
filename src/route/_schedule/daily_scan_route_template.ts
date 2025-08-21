@@ -21,7 +21,7 @@ export class DailyScanRouteTemplateService {
     private routeTemplateCustomerRepository: Repository<RouteTemplateCustomer>,
     @InjectRepository(RouteInstanceCustomer)
     private routeInstanceCustomerRepository: Repository<RouteInstanceCustomer>,
-  ) {}
+  ) { }
 
   // Chạy hàng ngày lúc 1h sáng theo giờ Việt Nam
   // @Cron('0 1 * * *', {
@@ -30,7 +30,7 @@ export class DailyScanRouteTemplateService {
   })
   async scanRouteTemplates() {
     this.logger.log('Bắt đầu quét route templates để tạo route instances...');
-    
+
     try {
       // Lấy tất cả route template đang active
       const routeTemplates = await this.routeTemplateRepository.find({
@@ -80,6 +80,59 @@ export class DailyScanRouteTemplateService {
     return false;
   }
 
+  private calculateEndDate(template: RouteTemplate, startDate: Date): Date | null {
+    if (template.repeat_type === 'WEEKLY') {
+      // repeat_on: 2=Monday, 3=Tuesday, ..., 7=Saturday, 8=Sunday
+      // End date sẽ là 1 ngày trước repeat_on của tuần tiếp theo
+      const targetDayOfWeek = template.repeat_on === 8 ? 0 : template.repeat_on - 1; // Chuyển về 0-6 format
+      
+      // Tìm ngày repeat_on của tuần tiếp theo
+      const nextWeekRepeatDay = new Date(startDate);
+      nextWeekRepeatDay.setDate(startDate.getDate() + 7); // Cộng 7 ngày để lên tuần sau
+      
+      // Điều chỉnh để về đúng ngày repeat_on trong tuần sau
+      const currentDayOfWeek = nextWeekRepeatDay.getDay();
+      let daysToAdjust = targetDayOfWeek - currentDayOfWeek;
+      if (daysToAdjust !== 0) {
+        nextWeekRepeatDay.setDate(nextWeekRepeatDay.getDate() + daysToAdjust);
+      }
+      
+      // End date = repeat_on tuần sau - 1 ngày
+      const endDate = new Date(nextWeekRepeatDay);
+      endDate.setDate(nextWeekRepeatDay.getDate() - 1);
+      return endDate;
+    }
+    
+    if (template.repeat_type === 'MONTHLY') {
+      // repeat_on: ngày trong tháng (1-31)
+      let targetMonth = startDate.getMonth();
+      let targetYear = startDate.getFullYear();
+      // Tính số ngày trong tháng hiện tại
+      const daysInCurrentMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
+      const targetDay = Math.min(template.repeat_on, daysInCurrentMonth);
+      let repeatDateThisMonth = new Date(targetYear, targetMonth, targetDay);
+      let endDate;
+      if (startDate < repeatDateThisMonth) {
+        // Nếu hôm nay chưa đến ngày repeat_on tháng này, end_date là repeat_on-1 tháng này
+        endDate = new Date(targetYear, targetMonth, targetDay - 1);
+      } else {
+        // Nếu đã qua, end_date là repeat_on-1 tháng sau
+        let nextMonth = targetMonth + 1;
+        let nextYear = targetYear;
+        if (nextMonth > 11) {
+          nextMonth = 0;
+          nextYear += 1;
+        }
+        const daysInNextMonth = new Date(nextYear, nextMonth + 1, 0).getDate();
+        const nextTargetDay = Math.min(template.repeat_on, daysInNextMonth);
+        endDate = new Date(nextYear, nextMonth, nextTargetDay - 1);
+      }
+      return endDate;
+    }
+    
+    return null;
+  }
+
   // Hàm public để tạo route instance từ template ID
   async createInstanceFromTemplate(templateId: number, date?: Date): Promise<void> {
     const targetDate = date || new Date();
@@ -122,10 +175,8 @@ export class DailyScanRouteTemplateService {
       const routeInstance = new RouteInstance();
       routeInstance.route_template_id = template.id;
       routeInstance.start_date = date;
-      routeInstance.end_date =
-        template.repeat_type === 'WEEKLY' ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 6) :
-        template.repeat_type === 'MONTHLY' ? new Date(date.getFullYear(), date.getMonth() + 1, 0) :
-        null;
+      routeInstance.end_date = this.calculateEndDate(template, date);
+      routeInstance.assignedEmployeeId = template.assignedEmployeeId;
       routeInstance.is_finished = false;
       routeInstance.created_at = new Date();
 

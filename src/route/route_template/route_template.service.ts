@@ -11,11 +11,16 @@ export class RouteTemplateService {
   ) {}
 
   findAll(): Promise<RouteTemplate[]> {
-    return this.routeTemplateRepository.find();
+    return this.routeTemplateRepository.find({
+      relations: ['assignedEmployee']
+    });
   }
 
   async findOne(id: number): Promise<RouteTemplate | null> {
-    return this.routeTemplateRepository.findOneBy({ id });
+    return this.routeTemplateRepository.findOne({
+      where: { id },
+      relations: ['assignedEmployee']
+    });
   }
 
   create(data: Partial<RouteTemplate>): Promise<RouteTemplate> {

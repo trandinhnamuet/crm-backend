@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from '../../general/user/user.entity';
 
 @Entity('route_template')
 export class RouteTemplate {
@@ -43,4 +44,11 @@ export class RouteTemplate {
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
+
+  @Column({ type: 'integer', nullable: true })
+  assignedEmployeeId: number;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'assignedEmployeeId' })
+  assignedEmployee: User;
 }

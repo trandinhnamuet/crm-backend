@@ -27,6 +27,11 @@ import { GoogleMapModule } from './route/google_map/google_map.module';
         database: config.get('DB_NAME'),
         autoLoadEntities: true,
         synchronize: true, // chỉ dùng dev, production thì bỏ
+        migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+        migrationsTableName: 'migrations',
+        cli: {
+          migrationsDir: 'migrations',
+        },
       }),
       inject: [ConfigService],
     }),
