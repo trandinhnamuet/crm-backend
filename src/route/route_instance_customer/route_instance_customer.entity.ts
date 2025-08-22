@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Customer } from '../customer/customer.entity';
+import { RouteInstance } from '../route_instance/route_instance.entity';
 
 @Entity('route_instance_customer')
 export class RouteInstanceCustomer {
@@ -8,6 +9,10 @@ export class RouteInstanceCustomer {
 
   @Column({ type: 'integer' })
   route_instance_id: number;
+
+  @ManyToOne(() => RouteInstance)
+  @JoinColumn({ name: 'route_instance_id' })
+  route_instance: RouteInstance;
 
   @Column({ type: 'integer' })
   customer_id: number;

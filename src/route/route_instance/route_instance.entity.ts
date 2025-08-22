@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { RouteTemplate } from '../route_template/route_template.entity';
+import { User } from '../../general/user/user.entity';
 
 @Entity('route_instance')
 export class RouteInstance {
@@ -24,4 +25,11 @@ export class RouteInstance {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
+
+  @Column({ type: 'integer', nullable: true })
+  assignedEmployeeId: number;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'assignedEmployeeId' })
+  assignedEmployee: User;
 }

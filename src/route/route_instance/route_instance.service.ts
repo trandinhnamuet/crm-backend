@@ -11,11 +11,16 @@ export class RouteInstanceService {
   ) {}
 
   findAll(): Promise<RouteInstance[]> {
-    return this.routeInstanceRepository.find({ relations: ['route_template'] });
+    return this.routeInstanceRepository.find({ 
+      relations: ['route_template', 'assignedEmployee'] 
+    });
   }
 
   async findOne(id: number): Promise<RouteInstance | null> {
-    return this.routeInstanceRepository.findOneBy({ id });
+    return this.routeInstanceRepository.findOne({
+      where: { id },
+      relations: ['route_template', 'assignedEmployee']
+    });
   }
 
   create(data: Partial<RouteInstance>): Promise<RouteInstance> {
