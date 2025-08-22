@@ -30,7 +30,7 @@ export class ImageController {
 		});
 		
 		// Trả về list link ảnh
-		const host = process.env.HOST || 'http://localhost:3003';
+		const host = process.env.HOST;
 		return ricImages.map(ricImage => ({
 			id: ricImage.id,
 			image_id: ricImage.image,
