@@ -12,6 +12,8 @@ import { RouteInstanceModule } from './route/route_instance/route_instance.modul
 import { AuthModule } from './auth/auth.module';
 import { RouteInstanceCustomerModule } from './route/route_instance_customer/route_instance_customer.module';
 import { GoogleMapModule } from './route/google_map/google_map.module';
+import { RouteInstanceCustomerImageModule } from './route/route_instance_customer_image/route_instance_customer_image.module';
+import { ImageModule } from './general/image/image.module';
 
 @Module({
   imports: [
@@ -42,7 +44,9 @@ import { GoogleMapModule } from './route/google_map/google_map.module';
     RouteInstanceModule,
     AuthModule,
     RouteInstanceCustomerModule,
-    GoogleMapModule
+    GoogleMapModule,
+    RouteInstanceCustomerImageModule,
+    ImageModule
   ],
   controllers: [AppController],
   providers: [AppService],

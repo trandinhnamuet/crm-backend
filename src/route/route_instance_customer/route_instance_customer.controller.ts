@@ -23,6 +23,11 @@ export class RouteInstanceCustomerController {
     return this.ricService.findByRouteInstance(Number(routeInstanceId));
   }
 
+  @Get('by-customer/:customer_id')
+  async getByCustomer(@Param('customer_id') customerId: number): Promise<RouteInstanceCustomer[]> {
+    return this.ricService.findByCustomer(Number(customerId));
+  }
+
   @Post()
   create(@Body() data: Partial<RouteInstanceCustomer>): Promise<RouteInstanceCustomer> {
     return this.ricService.create(data);
