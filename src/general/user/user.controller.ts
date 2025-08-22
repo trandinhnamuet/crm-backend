@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import * as process from 'process';
 
 @Controller('users')
 export class UserController {
@@ -12,10 +13,15 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<User> {
+  async findOne(@Param('id') id: number): Promise<any> {
     const entity = await this.userService.findOne(Number(id));
     if (!entity) throw new NotFoundException('User not found');
-    return entity;
+    let image_url = '';
+    if (entity.image_id) {
+      const host = process.env.HOST;
+      image_url = `${host}/images/link/${entity.image_id}`;
+    }
+    return { ...entity, image_url };
   }
 
   @Post()
